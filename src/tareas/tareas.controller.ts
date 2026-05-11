@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Patch, Delete, Body, Param } from '@nestjs/common';
 import { TareasService } from './tareas.service';
 
 @Controller('tareas')
@@ -16,8 +16,51 @@ export class TareasController {
   }
 
   @Post()
-  crear(@Body() body: { usuarioId: number; titulo: string; descripcion: string; fecha_limite: string }) {
-    return this.tareasService.crear(body.usuarioId, body.titulo, body.descripcion, body.fecha_limite);
+  crear(
+    @Body()
+    body: {
+      usuarioId: number;
+      titulo: string;
+      descripcion: string;
+      fecha_limite: string;
+      categoria: string;
+      prioridad: string;
+      dificultad: number;
+    },
+  ) {
+    return this.tareasService.crear(
+      body.usuarioId,
+      body.titulo,
+      body.descripcion,
+      body.fecha_limite,
+      body.categoria,
+      body.prioridad,
+      body.dificultad,
+    );
+  }
+
+  @Put(':id')
+  editar(
+    @Param('id') id: string,
+    @Body()
+    body: {
+      titulo: string;
+      descripcion: string;
+      fecha_limite: string;
+      categoria: string;
+      prioridad: string;
+      dificultad: number;
+    },
+  ) {
+    return this.tareasService.editar(
+      +id,
+      body.titulo,
+      body.descripcion,
+      body.fecha_limite,
+      body.categoria,
+      body.prioridad,
+      body.dificultad,
+    );
   }
 
   @Patch(':id/completar')
