@@ -15,6 +15,18 @@ export class Tarea {
   @Column({ type: 'date', nullable: true })
   fecha_limite!: string;
 
+  /** 'Curricular' | 'Extracurricular' | 'Recreación' */
+  @Column({ default: 'Curricular' })
+  categoria!: string;
+
+  /** 'Alta' | 'Media' | 'Baja' */
+  @Column({ default: 'Media' })
+  prioridad!: string;
+
+  /** Escala 1-5 */
+  @Column({ default: 1 })
+  dificultad!: number;
+
   @Column({ default: false })
   completada!: boolean;
 
