@@ -15,7 +15,7 @@ export class Perfil {
   @Column({ nullable: true })
   semestre!: number;
 
-  @OneToOne(() => Usuario)
-  @JoinColumn()
+  @OneToOne(() => Usuario, usuario => usuario.perfil)
+  @JoinColumn({ name: 'usuario_id' })
   usuario!: Usuario;
 }
