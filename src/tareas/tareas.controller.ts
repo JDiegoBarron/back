@@ -63,7 +63,7 @@ export class TareasController {
     );
   }
 
-  @Patch(':id/completar')
+  @Put(':id/completar')
   completar(@Param('id') id: string) {
     return this.tareasService.completar(+id);
   }
