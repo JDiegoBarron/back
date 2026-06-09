@@ -5,6 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { TareasModule } from './tareas/tareas.module';
 import { PerfilModule } from './perfil/perfil.module';
 import { CuestionarioModule } from './cuestionario/cuestionario.module';
+import { RachaModule } from './racha/racha.module';
+import { CosmeticosModule } from './cosmeticos/cosmeticos.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { CuestionarioModule } from './cuestionario/cuestionario.module';
     TareasModule,
     PerfilModule,
     CuestionarioModule,
+    RachaModule,
+    CosmeticosModule,
   ],
 })
 export class AppModule {}
