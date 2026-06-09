@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, Like, Repository } from 'typeorm';
 import { Tarea } from './tarea.entity';
 
 @Injectable()
@@ -30,7 +30,6 @@ export class TareasService {
     const tareas = await this.tareaRepo.find({
       where: { usuario: { id: usuarioId }, completada: false },
       order: { fecha_limite: 'ASC' },
-      // Se eliminó el límite arbitrario de 5 — el cliente decide cuántas mostrar
     });
     return tareas.map(t => this.conVencida(t));
   }
@@ -93,4 +92,30 @@ export class TareasService {
     if (resultado.affected === 0) throw new NotFoundException('Tarea no encontrada');
     return { mensaje: 'Tarea eliminada' };
   }
+
+    async obtenerPorMes(userId: number, mes?: string): Promise<Tarea[]> {
+    // Si no viene el parámetro, usar el mes actual  →  "YYYY-MM"
+    const target = mes ?? new Date().toISOString().slice(0, 7);
+ 
+    // Validar formato YYYY-MM
+    if (!/^\d{4}-\d{2}$/.test(target)) {
+      throw new BadRequestException('Formato de mes inválido. Usa YYYY-MM.');
+    }
+ 
+    const [yearStr, monthStr] = target.split('-');
+    const month = parseInt(monthStr, 10);
+    if (month < 1 || month > 12) {
+      throw new BadRequestException('Mes fuera de rango (01-12).');
+    }
+ 
+    // Como fecha_limite es 'YYYY-MM-DD', basta con Like('YYYY-MM-%')
+    return this.tareaRepo.find({
+      where: {
+        usuario:     { id: userId },
+        fecha_limite: Like(`${target}-%`),
+      },
+      order: { fecha_limite: 'ASC' },
+    });
+  }
+
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Patch, Delete, Body, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { TareasService } from './tareas.service';
 
 @Controller('tareas')
@@ -72,4 +72,13 @@ export class TareasController {
   eliminar(@Param('id') id: string) {
     return this.tareasService.eliminar(+id);
   }
+
+  @Get('calendario/:userId')
+  calendario(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Query('mes') mes?: string,
+  ) {
+    return this.tareasService.obtenerPorMes(userId, mes);
+  }
+
 }

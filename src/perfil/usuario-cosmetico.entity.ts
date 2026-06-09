@@ -2,14 +2,18 @@ import { Usuario } from "src/auth/usuario.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Cosmetico } from "./cosmetico.entity";
 
-@Entity()
+@Entity('usuario_cosmetico')
 export class UsuarioCosmetico {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Column({ name: 'usuario_id' })
+  usuarioId!: number;
+
   @ManyToOne(() => Usuario, u => u.cosmeticosComprados)
   @JoinColumn({ name: 'usuario_id' })
   usuario!: Usuario;
+
 
   @ManyToOne(() => Cosmetico, c => c.usuarios)
   @JoinColumn({ name: 'cosmetico_id' })
