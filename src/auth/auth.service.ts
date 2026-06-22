@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
 import * as bcrypt from 'bcrypt';
+import { CosmeticosService } from 'src/cosmeticos/cosmeticos.service';
 
 const SALT_ROUNDS = 10;
 
@@ -11,6 +12,7 @@ export class AuthService {
   constructor(
     @InjectRepository(Usuario)
     private usuarioRepo: Repository<Usuario>,
+    private cosmeticosService: CosmeticosService,
   ) {}
 
   async login(username: string, password: string) {
@@ -34,6 +36,8 @@ export class AuthService {
     const hash = await bcrypt.hash(password, SALT_ROUNDS);
     const nuevo = this.usuarioRepo.create({ username, password: hash, nombre_completo });
     const guardado = await this.usuarioRepo.save(nuevo);
+
+    await this.cosmeticosService.inicializarParaNuevoUsuario(guardado.id) 
 
     return {
       id: guardado.id,

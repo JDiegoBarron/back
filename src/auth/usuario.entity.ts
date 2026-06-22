@@ -30,7 +30,7 @@ export class Usuario {
   mejorRacha!: number;
 
   @Column({ name: 'ultimo_login', type: 'date', nullable: true })
-  ultimoLogin!: Date | null;
+  ultimoLogin!: string | null;
 
   @OneToOne(() => Perfil, perfil => perfil.usuario, { cascade: true })
   perfil!: Perfil;

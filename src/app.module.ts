@@ -22,7 +22,10 @@ import { CosmeticosModule } from './cosmeticos/cosmeticos.module';
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_NAME'),
         autoLoadEntities: true,
-        synchronize: true, // crea las tablas automáticamente (perfecto para proyecto escolar)
+        synchronize: false, // crea las tablas automáticamente (perfecto para proyecto escolar)
+        extra: {
+          ssl: { rejectUnauthorized: false }, 
+        }
       }),
     }),
     AuthModule,
