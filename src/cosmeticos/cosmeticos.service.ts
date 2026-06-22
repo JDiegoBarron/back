@@ -25,7 +25,7 @@ export class CosmeticosService {
     private readonly usuarioRepo: Repository<Usuario>,
 
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   async obtenerParaUsuario(userId: number): Promise<CosmeticoConEstadoDto[]> {
     // Todos los cosméticos del catálogo
@@ -44,15 +44,15 @@ export class CosmeticosService {
     return todos.map((c) => {
       const estado = mapa.get(c.id);
       return {
-        id:          c.id,
-        nombre:      c.nombre,
+        id: c.id,
+        nombre: c.nombre,
         descripcion: c.descripcion ?? '',
-        tipo:        c.tipo as 'TEMA' | 'MARCO',
-        precio:      c.precio,
+        tipo: c.tipo as 'TEMA' | 'MARCO',
+        precio: c.precio,
         indiceLocal: c.indiceLocal,
         // Si no hay registro: los gratuitos se consideran comprados automáticamente
         comprado: estado ? estado.comprado : c.precio === 0,
-        activo:   estado ? estado.activo   : false,
+        activo: estado ? estado.activo : false,
       };
     });
   }
@@ -96,7 +96,7 @@ export class CosmeticosService {
           usuarioId,
           cosmetico,
           comprado: true,
-          activo:   false,
+          activo: false,
         });
         await queryRunner.manager.save(nuevo);
       }
@@ -129,19 +129,26 @@ export class CosmeticosService {
       throw new BadRequestException('Debes comprar este cosmético antes de activarlo');
     }
 
-    await this.dataSource
-      .createQueryBuilder()
-      .update(UsuarioCosmetico)
-      .set({ activo: false })
-      .where(
-        'usuario_id = :uid AND activo = true AND cosmetico_id IN ' +
-          '(SELECT id FROM cosmetico WHERE tipo = :tipo)',
-        { uid: usuarioId, tipo: cosmetico.tipo },
-      )
-      .execute();
+    const cosmeticosMismoTipo = await this.cosmeticoRepo.find({
+      where: { tipo: cosmetico.tipo },
+      select: ['id'],
+    });
+    const ids = cosmeticosMismoTipo.map((c) => c.id);
+
+    if (ids.length > 0) {
+      await this.ucRepo
+        .createQueryBuilder()
+        .update()
+        .set({ activo: false })
+        .where('usuario_id = :uid AND activo = true AND cosmetico_id IN (:...ids)', {
+          uid: usuarioId,
+          ids,
+        })
+        .execute();
+    }
 
     if (registro) {
-      registro.activo   = true;
+      registro.activo = true;
       registro.comprado = true; // garantizar comprado para gratuitos
       await this.ucRepo.save(registro);
     } else {
@@ -150,7 +157,7 @@ export class CosmeticosService {
         usuarioId,
         cosmetico,
         comprado: true,
-        activo:   true,
+        activo: true,
       });
       await this.ucRepo.save(nuevo);
     }
@@ -168,8 +175,8 @@ export class CosmeticosService {
       const uc = this.ucRepo.create({
         usuarioId,
         cosmetico: c,
-        comprado:  true,
-        activo:    esDefault,
+        comprado: true,
+        activo: esDefault,
       });
       await this.ucRepo.save(uc);
     }
