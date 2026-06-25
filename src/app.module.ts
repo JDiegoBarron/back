@@ -7,6 +7,7 @@ import { PerfilModule } from './perfil/perfil.module';
 import { CuestionarioModule } from './cuestionario/cuestionario.module';
 import { RachaModule } from './racha/racha.module';
 import { CosmeticosModule } from './cosmeticos/cosmeticos.module';
+import { SeccionesModule } from './secciones/secciones.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { CosmeticosModule } from './cosmeticos/cosmeticos.module';
     CuestionarioModule,
     RachaModule,
     CosmeticosModule,
+    SeccionesModule,
   ],
 })
 export class AppModule {}
