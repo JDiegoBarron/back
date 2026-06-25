@@ -24,12 +24,10 @@ export class PerfilService {
     });
 
     if (perfil) {
-      // actualizar si ya existe
       perfil.correo = correo;
       perfil.carrera = carrera;
       perfil.semestre = semestre;
     } else {
-      // crear si es la primera vez
       perfil = this.perfilRepo.create({
         correo, carrera, semestre,
         usuario: { id: usuarioId },

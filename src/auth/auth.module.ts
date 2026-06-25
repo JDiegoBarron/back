@@ -12,6 +12,6 @@ import { CosmeticosModule } from 'src/cosmeticos/cosmeticos.module';
   ],
   controllers: [AuthController],
   providers: [AuthService],
-  exports: [TypeOrmModule], // para que otros módulos puedan usar Usuario
+  exports: [TypeOrmModule], 
 })
 export class AuthModule {}

@@ -28,10 +28,8 @@ export class CosmeticosService {
   ) { }
 
   async obtenerParaUsuario(userId: number): Promise<CosmeticoConEstadoDto[]> {
-    // Todos los cosméticos del catálogo
     const todos = await this.cosmeticoRepo.find({ order: { tipo: 'ASC', precio: 'ASC' } });
 
-    // Registros de este usuario
     const registros = await this.ucRepo.find({
       where: { usuarioId: userId },
       relations: ['cosmetico'],
@@ -50,7 +48,6 @@ export class CosmeticosService {
         tipo: c.tipo as 'TEMA' | 'MARCO',
         precio: c.precio,
         indiceLocal: c.indiceLocal,
-        // Si no hay registro: los gratuitos se consideran comprados automáticamente
         comprado: estado ? estado.comprado : c.precio === 0,
         activo: estado ? estado.activo : false,
       };
@@ -64,7 +61,6 @@ export class CosmeticosService {
     const cosmetico = await this.cosmeticoRepo.findOne({ where: { id: cosmeticoId } });
     if (!cosmetico) throw new NotFoundException('Cosmético no encontrado');
 
-    // Verificar que no esté ya comprado
     const existente = await this.ucRepo.findOne({
       where: { usuarioId, cosmetico: { id: cosmeticoId } },
       relations: ['cosmetico'],
@@ -84,7 +80,6 @@ export class CosmeticosService {
     await queryRunner.startTransaction();
 
     try {
-      // Descontar monedas
       usuario.monedas -= cosmetico.precio;
       await queryRunner.manager.save(usuario);
 
@@ -109,7 +104,6 @@ export class CosmeticosService {
       await queryRunner.release();
     }
 
-    // Devolver saldo actualizado
     return { monedasRestantes: usuario.monedas };
   }
 
@@ -149,10 +143,9 @@ export class CosmeticosService {
 
     if (registro) {
       registro.activo = true;
-      registro.comprado = true; // garantizar comprado para gratuitos
+      registro.comprado = true;
       await this.ucRepo.save(registro);
     } else {
-      // Primera vez que activa un cosmético gratuito: crear el registro
       const nuevo = this.ucRepo.create({
         usuarioId,
         cosmetico,
@@ -169,7 +162,7 @@ export class CosmeticosService {
     const gratuitos = await this.cosmeticoRepo.find({ where: { precio: 0 } });
 
     for (const c of gratuitos) {
-      // Es el tema predeterminado (índice 0) → activarlo
+      // Es el tema predeterminado (índice 0) 
       const esDefault = c.tipo === TipoCosmetico.TEMA && c.indiceLocal === 0;
 
       const uc = this.ucRepo.create({

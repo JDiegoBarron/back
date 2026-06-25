@@ -23,7 +23,7 @@ import { SeccionesModule } from './secciones/secciones.module';
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_NAME'),
         autoLoadEntities: true,
-        synchronize: false, // crea las tablas automáticamente (perfecto para proyecto escolar)
+        synchronize: false, 
         extra: {
           ssl: { rejectUnauthorized: false }, 
         }

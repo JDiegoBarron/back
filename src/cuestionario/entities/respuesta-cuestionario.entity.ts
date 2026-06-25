@@ -1,4 +1,3 @@
-// cuestionario/respuesta-cuestionario.entity.ts
 import { Usuario } from 'src/auth/usuario.entity';
 import { Seccion } from 'src/secciones/seccion.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
@@ -15,7 +14,7 @@ export class RespuestaCuestionario {
   seccion!: Seccion;
 
   @Column()
-  numeroPreguntaGlobal!: number; // 1..21, igual al índice que ya usa Swing (idx+1)
+  numeroPreguntaGlobal!: number;
 
   @Column()
   valor!: number;

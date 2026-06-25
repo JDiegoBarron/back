@@ -94,10 +94,8 @@ export class TareasService {
   }
 
     async obtenerPorMes(userId: number, mes?: string): Promise<Tarea[]> {
-    // Si no viene el parámetro, usar el mes actual  →  "YYYY-MM"
     const target = mes ?? new Date().toISOString().slice(0, 7);
  
-    // Validar formato YYYY-MM
     if (!/^\d{4}-\d{2}$/.test(target)) {
       throw new BadRequestException('Formato de mes inválido. Usa YYYY-MM.');
     }
@@ -108,7 +106,6 @@ export class TareasService {
       throw new BadRequestException('Mes fuera de rango (01-12).');
     }
  
-    // Como fecha_limite es 'YYYY-MM-DD', basta con Like('YYYY-MM-%')
     return this.tareaRepo.find({
       where: {
         usuario:     { id: userId },

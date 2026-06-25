@@ -1,4 +1,3 @@
-// cuestionario/cuestionario.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -76,7 +75,7 @@ export class CuestionarioService {
         proximaDisponible: disponible || !ultima
           ? null
           : this.calcularProximaFecha(seccion, ultima.contestadaEn),
-        ultimosValores, // { [numeroPreguntaGlobal]: valor }
+        ultimosValores, 
       });
     }
     return resultado;
@@ -133,12 +132,8 @@ async obtenerUltimasRespuestasCompletas(usuarioId: number): Promise<number[] | n
     });
     if (ultima) valores[p - 1] = ultima.valor;
   }
-
-  // Si nunca contestó ninguna pregunta, no hay nada que mostrar
   if (valores.every(v => v === null)) return null;
 
-  // Si contestó algunas pero no todas (caso raro, ej. datos parciales),
-  // rellenamos con un valor neutro para no romper EvaluadorEstres
   return valores.map(v => v ?? 3);
 }
 }
