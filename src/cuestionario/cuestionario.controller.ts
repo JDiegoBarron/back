@@ -15,4 +15,11 @@ export class CuestionarioController {
   guardar(@Body() body: { usuarioId: number; respuestasPorSeccion: Record<string, { pregunta: number; valor: number }[]> }) {
     return this.cuestionarioService.guardar(body.usuarioId, body.respuestasPorSeccion);
   }
+
+  // cuestionario.controller.ts — nuevo endpoint
+@Get('usuario/:usuarioId/ultimas-respuestas')
+async obtenerUltimasRespuestas(@Param('usuarioId') usuarioId: string) {
+  const valores = await this.cuestionarioService.obtenerUltimasRespuestasCompletas(+usuarioId);
+  return { respuestas: valores }; // null si nunca contestó nada
+}
 }

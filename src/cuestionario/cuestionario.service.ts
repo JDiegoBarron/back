@@ -121,4 +121,24 @@ export class CuestionarioService {
     }
     return { ok: true };
   }
+
+  
+async obtenerUltimasRespuestasCompletas(usuarioId: number): Promise<number[] | null> {
+  const valores: (number | null)[] = new Array(21).fill(null);
+
+  for (let p = 1; p <= 21; p++) {
+    const ultima = await this.respuestaRepo.findOne({
+      where: { usuario: { id: usuarioId }, numeroPreguntaGlobal: p },
+      order: { fecha: 'DESC' },
+    });
+    if (ultima) valores[p - 1] = ultima.valor;
+  }
+
+  // Si nunca contestó ninguna pregunta, no hay nada que mostrar
+  if (valores.every(v => v === null)) return null;
+
+  // Si contestó algunas pero no todas (caso raro, ej. datos parciales),
+  // rellenamos con un valor neutro para no romper EvaluadorEstres
+  return valores.map(v => v ?? 3);
+}
 }
