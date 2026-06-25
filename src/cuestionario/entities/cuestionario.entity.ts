@@ -1,4 +1,4 @@
-import { Usuario } from 'src/auth/usuario.entity';
+/*import { Usuario } from 'src/auth/usuario.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 
 
@@ -45,4 +45,4 @@ export class Cuestionario {
 
   @CreateDateColumn()
   fecha!: Date;
-}
+}*/
