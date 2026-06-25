@@ -18,6 +18,6 @@ export class Seccion {
   @Column({ type: 'enum', enum: ['DIARIA', 'PERIODICA'] })
   tipoPeriodicidad!: 'DIARIA' | 'PERIODICA';
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   intervaloDias!: number | null; // 5 para las periódicas, null para diarias
 }
